@@ -34,6 +34,7 @@ public class Empreendimento {
     @ManyToOne
     @JoinColumn(name = "fk_endereco")
     private Endereco endereco;
+
     @Enumerated(EnumType.STRING)
     private Modalidade modalidade;
 
@@ -42,7 +43,7 @@ public class Empreendimento {
     private DadosUH dadosUH;
 
     @ManyToOne
-    @JoinColumn(name = "fk_endereco")
+    @JoinColumn(name = "fk_construtora")
     private Construtora construtora;
 
 }

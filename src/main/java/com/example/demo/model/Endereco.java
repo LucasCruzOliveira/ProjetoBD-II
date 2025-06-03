@@ -21,7 +21,6 @@ public class Endereco {
     @Column(nullable = false)
     private String numero;
 
-    @Column(nullable = false)
     private String complemento;
 
     @Column(nullable = false)
