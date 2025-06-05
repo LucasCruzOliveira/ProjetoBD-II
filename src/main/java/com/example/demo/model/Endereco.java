@@ -1,11 +1,18 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
+
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Endereco {
 
     @Id
@@ -32,4 +39,14 @@ public class Endereco {
 
     @OneToMany
     private List<Empreendimento> empreendimento;
+
+    public Endereco(String logradouro, String bairro, String numero, String complemento, String cep, Municipio municipio, List<Empreendimento> empreendimento) {
+        this.logradouro = logradouro;
+        this.bairro = bairro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.cep = cep;
+        this.municipio = municipio;
+        this.empreendimento = empreendimento;
+    }
 }

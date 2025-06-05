@@ -46,4 +46,13 @@ public class Empreendimento {
     @JoinColumn(name = "fk_construtora")
     private Construtora construtora;
 
+    public Empreendimento(String nome, Situacao situacao, LocalDate dataAssinatura, String codigoOperacao, BigDecimal valorDesembolsado, BigDecimal valorTotalContratado, Modalidade modalidade) {
+        this.nome = nome;
+        this.situacao = situacao;
+        this.dataAssinatura = dataAssinatura;
+        this.codigoOperacao = codigoOperacao;
+        this.valorDesembolsado = valorDesembolsado;
+        this.valorTotalContratado = valorTotalContratado;
+        this.modalidade = modalidade;
+    }
 }

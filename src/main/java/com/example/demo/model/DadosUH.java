@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 public class DadosUH {
 
     @Id
@@ -28,4 +28,10 @@ public class DadosUH {
     @Column(nullable = false)
     private int distratadas;
 
+    public DadosUH(int quantidade, int entregues, int vigentes, int distratadas) {
+        this.quantidade = quantidade;
+        this.entregues = entregues;
+        this.vigentes = vigentes;
+        this.distratadas = distratadas;
+    }
 }
