@@ -38,12 +38,14 @@ public class EnderecoService extends ParseService {
         for(CSVRecord csvRecord : csvService.getRecords()){
             String texto  = csvRecord.get("txt_endereco").toUpperCase();
             String cep = csvRecord.get("txt_cep");
+            String bairro = buscarBairro(texto);
+            String numero = buscarNumero(texto);
             Matcher matcher = pattern.matcher(texto);
 
             if(matcher.find()){
                 try{
                     String logradouro = matcher.group();
-                    Endereco endereco = new Endereco(logradouro,"", "",texto, cep, null);
+                    Endereco endereco = new Endereco(logradouro,bairro, numero, texto, cep, null);
                     enderecoDAO.save(endereco);
                 }
                 catch (Exception e){
@@ -52,5 +54,33 @@ public class EnderecoService extends ParseService {
             }
         }
 
+    }
+    public String buscarBairro(String texto){
+        texto = texto.toUpperCase();
+        Pattern bairroPattern = Pattern.compile("(BAIRRO\\s)");
+        Matcher matcher = bairroPattern.matcher(texto);
+        if(matcher.find()){
+            return texto.substring(matcher.start());
+        }
+        else{
+            return "SEM BAIRRO";
+        }
+    }
+    public String buscarNumero(String texto){
+        texto = texto.toUpperCase();
+        Pattern snPattern = Pattern.compile("\\b(S/N|SN)\\b");
+        Matcher snMatcher = snPattern.matcher(texto);
+        if (snMatcher.find()) {
+            return "S/N";
+        }
+        // Nessa linha a preocupação é achar algo que comece com: (Numero, n°, num, n),
+        // Depois também é buscado o intervalo numérico em si
+        Pattern numeroPattern = Pattern.compile("\\b(N[ÚU]MERO|N[°]|NUM)?\\s*(\\d{1,5})\\b");
+        Matcher numeroMatcher = numeroPattern.matcher(texto);
+        if (numeroMatcher.find()) {
+            return numeroMatcher.group(2);
+        }
+
+        return "";
     }
 }
