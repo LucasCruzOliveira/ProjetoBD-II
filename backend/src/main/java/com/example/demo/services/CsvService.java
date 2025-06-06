@@ -1,10 +1,5 @@
 package com.example.demo.services;
 
-import com.example.demo.dao.MunicipioDAO;
-import com.example.demo.enums.Regiao;
-import com.example.demo.enums.UF;
-import com.example.demo.model.Endereco;
-import com.example.demo.model.Municipio;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.csv.CSVFormat;
@@ -14,7 +9,6 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -23,12 +17,16 @@ import java.util.*;
 @Getter
 @Setter
 public class CsvService {
-    private final CSVParser parser;
-    private final List<CSVRecord> records;
+    private  CSVParser parser;
+    private  List<CSVRecord> records;
 
     public CsvService() {
-        this.parser = criarParser("base_ogu.csv", ';');
-        this.records = parser.getRecords();
+        try{
+            criarParser("base_ogu.csv", ';');
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public void lerPorCabecario(boolean repeticao){
@@ -69,27 +67,19 @@ public class CsvService {
         }
     }
 
-    public CSVParser criarParser(String path, char separador){
-        try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
-            if (inputStream == null) {
-                throw new IllegalArgumentException("Arquivo não encontrado: " + path);
-            }
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-
-            CSVParser csvParser = CSVFormat.DEFAULT
-                    .withDelimiter(separador)
-                    .withFirstRecordAsHeader()
-                    .parse(reader);
-            return csvParser;
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+    public void criarParser(String path, char separador) throws Exception {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new FileNotFoundException("Arquivo não encontrado no classpath: " + path);
         }
-        return null;
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        this.parser = CSVFormat.DEFAULT
+                .withDelimiter(separador)
+                .withFirstRecordAsHeader()
+                .parse(reader);
+        this.records = parser.getRecords();
     }
-
-
 
 }
