@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MunicipioService implements Parser<Municipio> {
-    private CsvService csvService;
+public class MunicipioService extends ParseService {
     private MunicipioDAO municipioDAO;
 
     public MunicipioService(CsvService csvService, MunicipioDAO municipioDAO) {
-        this.csvService = csvService;
+        super(csvService);
         this.municipioDAO = municipioDAO;
     }
 

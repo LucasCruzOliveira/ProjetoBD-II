@@ -7,12 +7,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DadosUHService implements Parser<DadosUH> {
-    private CsvService csvService;
+public class DadosUHService extends ParseService{
     private DadosUhDAO dadosUhDAO;
 
     public DadosUHService(CsvService csvService, DadosUhDAO dadosUhDAO) {
-        this.csvService = csvService;
+        super(csvService);
         this.dadosUhDAO = dadosUhDAO;
     }
 

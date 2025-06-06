@@ -28,7 +28,7 @@ public class Endereco {
     @Column(nullable = false)
     private String numero;
 
-    private String complemento;
+    private String texto;
 
     @Column(nullable = false)
     private String cep;
@@ -40,13 +40,12 @@ public class Endereco {
     @OneToMany
     private List<Empreendimento> empreendimento;
 
-    public Endereco(String logradouro, String bairro, String numero, String complemento, String cep, Municipio municipio, List<Empreendimento> empreendimento) {
+    public Endereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio) {
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.numero = numero;
-        this.complemento = complemento;
+        this.texto = texto;
         this.cep = cep;
         this.municipio = municipio;
-        this.empreendimento = empreendimento;
     }
 }

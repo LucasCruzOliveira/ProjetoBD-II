@@ -5,12 +5,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConstrutoraService implements Parser<Construtora>{
-    private CsvService csvService;
+public class ConstrutoraService extends ParseService{
     private ConstrutoraDAO construtoraDAO;
 
     public ConstrutoraService(CsvService csvService, ConstrutoraDAO construtoraDAO) {
-        this.csvService = csvService;
+        super(csvService);
         this.construtoraDAO = construtoraDAO;
     }
 
@@ -20,8 +19,17 @@ public class ConstrutoraService implements Parser<Construtora>{
         for(CSVRecord csvRecord : csvService.getRecords()){
             String nome = csvRecord.get("txt_nome_construtora_entidade").trim();
             String cnpj = csvRecord.get("txt_cnpj_construtora_entidade");
+
+            if(nome.isBlank() || nome.equals("Não informado")){
+                nome = ("DESCONHECIDO");
+            }
+            if(cnpj.isBlank()){
+                cnpj = ("NÃO INFORMADO");
+            }
             Construtora construtora = new Construtora(nome, cnpj);
             construtoraDAO.save(construtora);
+
+
         }
     }
 }

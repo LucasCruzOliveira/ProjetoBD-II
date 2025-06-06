@@ -13,8 +13,8 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
-import java.io.Reader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -26,8 +26,8 @@ public class CsvService {
     private final CSVParser parser;
     private final List<CSVRecord> records;
 
-    public CsvService(MunicipioDAO municipioDAO) {
-        this.parser = criarParser("./src/main/resources/base_ogu.csv", ';');
+    public CsvService() {
+        this.parser = criarParser("base_ogu.csv", ';');
         this.records = parser.getRecords();
     }
 
@@ -71,7 +71,13 @@ public class CsvService {
 
     public CSVParser criarParser(String path, char separador){
         try {
-            Reader reader = Files.newBufferedReader(Paths.get(path));
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Arquivo não encontrado: " + path);
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
             CSVParser csvParser = CSVFormat.DEFAULT
                     .withDelimiter(separador)
                     .withFirstRecordAsHeader()
