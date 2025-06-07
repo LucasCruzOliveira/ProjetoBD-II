@@ -1,15 +1,64 @@
-$theme-colors: (
-  "primary":    $primary,
-  "secondary":  $secondary,
-  "success":    $success,
-  "info":       $info,
-  "warning":    $warning,
-  "danger":     $danger,
-  "light":      $light,
-  "dark":       $dark
-);
+// Importa apenas as variáveis do Bootstrap
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
 
-
-.nav {
-    
+.home-area {
+    padding: 3rem;
 }
+
+.navbar {
+
+    .btn-tabela {
+        background-color: $cyan-500;
+        color: $dark;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.4rem;
+        font-weight: bold;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: darken($cyan-600, 10%);
+        }
+    }
+
+    .navegacao {
+        display: flex;
+        gap: 10px;
+
+        .btn {
+            background-color: transparent;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: $gray-800;
+            }
+
+            &:shover {
+                background-color: $primary;
+            }
+        }
+    }
+
+
+}
+
+.dashboard {
+  display: none;
+}
+
+.dashboard.ativo {
+  display: block;
+}
+
+
+#graficoPizza, #graficoRosca {
+  display: block;
+  margin: 0 auto;
+}
+
