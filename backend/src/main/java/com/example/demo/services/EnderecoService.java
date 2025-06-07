@@ -1,6 +1,9 @@
 package com.example.demo.services;
 
 import com.example.demo.dao.EnderecoDAO;
+import com.example.demo.dao.MunicipioDAO;
+import com.example.demo.enums.Regiao;
+import com.example.demo.enums.UF;
 import com.example.demo.model.Endereco;
 import com.example.demo.model.Municipio;
 import org.apache.commons.csv.CSVRecord;
@@ -13,11 +16,13 @@ import java.util.regex.Pattern;
 
 @Service
 public class EnderecoService extends ParseService {
+    private final MunicipioDAO municipioDAO;
     private EnderecoDAO enderecoDAO;
     private List<Pattern> patterns;
-    public EnderecoService(CsvService csvService, EnderecoDAO enderecoDAO){
+    public EnderecoService(CsvService csvService, EnderecoDAO enderecoDAO, MunicipioDAO municipioDAO){
         super(csvService);
         this.enderecoDAO = enderecoDAO;
+        this.municipioDAO = municipioDAO;
     }
     @Override
     public void parseToRelational() {
@@ -43,8 +48,17 @@ public class EnderecoService extends ParseService {
     public void buscarEnderecoPorRegex(Pattern pattern){
 
         for(CSVRecord csvRecord : csvService.getRecords()){
-            String texto  = csvRecord.get("txt_endereco").toUpperCase();
-            String cep = csvRecord.get("txt_cep");
+            String texto  = csvRecord.get("txt_endereco").toUpperCase().trim();
+            String cep = csvRecord.get("txt_cep").toUpperCase().trim();
+            String nomeMunicipio = csvRecord.get("txt_nome_municipio").toUpperCase().trim();
+            UF uf = UF.valueOf(csvRecord.get("txt_sigla_uf").toUpperCase().trim());
+            String regiao = csvRecord.get("txt_regiao").toUpperCase().trim();
+
+            if(regiao.equals("CENTRO-OESTE")){
+                regiao = "CENTRO_OESTE";
+            }
+            Regiao regiaoEnum = Regiao.valueOf(regiao);
+
             if(cep.length() != 8){
                 cep = "DESCONHECIDO";
             }
@@ -57,7 +71,12 @@ public class EnderecoService extends ParseService {
                     String numero = buscarNumero(texto, matcher.end(1));
                     String logradouro = matcher.group().replace("S/N", "")
                             .replaceAll("(\\b(SN|S/N|NR|N\\.|N°|N)\\b.*)", "");
-                    acharOuCriarEndereco(logradouro, bairro, numero, texto, cep, null);
+                    Optional<Municipio> opMunicipio = municipioDAO.findMunicipioByNomeAndUfAndRegiao(nomeMunicipio, uf, regiaoEnum);
+                    Municipio municipio = null;
+                    if(opMunicipio.isPresent()){
+                        municipio = opMunicipio.get();
+                    }
+                    acharOuCriarEndereco(logradouro, bairro, numero, texto, cep, municipio);
                 }
                 catch (Exception e){
                     System.out.println(e.getMessage());
