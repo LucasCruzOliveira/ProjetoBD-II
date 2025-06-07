@@ -2,10 +2,12 @@ package com.example.demo.services;
 
 import com.example.demo.dao.EnderecoDAO;
 import com.example.demo.model.Endereco;
+import com.example.demo.model.Municipio;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,34 +34,47 @@ public class EnderecoService extends ParseService {
 
         for(Pattern pattern : patterns){
             buscarEnderecoPorRegex(pattern);
+
         }
     }
+
+
 
     public void buscarEnderecoPorRegex(Pattern pattern){
 
         for(CSVRecord csvRecord : csvService.getRecords()){
             String texto  = csvRecord.get("txt_endereco").toUpperCase();
             String cep = csvRecord.get("txt_cep");
+            if(cep.length() != 8){
+                cep = "DESCONHECIDO";
+            }
             String bairro = buscarBairro(texto);
 
             Matcher matcher = pattern.matcher(texto);
 
             if(matcher.find()){
                 try{
-
+                    String numero = buscarNumero(texto, matcher.end(1));
                     String logradouro = matcher.group().replace("S/N", "")
                             .replaceAll("(\\b(SN|S/N|NR|N\\.|N°|N)\\b.*)", "");
-                    String numero = buscarNumero(texto, matcher.end());
-                    Endereco endereco = new Endereco(logradouro,bairro, numero, texto, cep, null);
-                    enderecoDAO.save(endereco);
+                    acharOuCriarEndereco(logradouro, bairro, numero, texto, cep, null);
                 }
                 catch (Exception e){
                     System.out.println(e.getMessage());
                 }
             }
         }
-
     }
+
+    public Endereco acharOuCriarEndereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio){
+        Optional<Endereco> enderecoOptional = enderecoDAO.findByCepAndLogradouroAndNumero(cep, logradouro, numero);
+        if(enderecoOptional.isPresent()){
+           return enderecoOptional.get();
+        }else {
+            return enderecoDAO.save(new Endereco(logradouro, bairro, numero,texto, cep, municipio));
+        }
+    }
+
     public String buscarBairro(String texto){
         texto = texto.toUpperCase();
         Pattern bairroPattern = Pattern.compile("(BAIRRO\\s)");
@@ -82,7 +97,7 @@ public class EnderecoService extends ParseService {
         }
 
         // Buscando primeiramente por prefixos
-        Pattern prefixoPattern = Pattern.compile("\\b(N[ÚU]MERO|N[°º]?|N.|NUM)\\s*(\\d{1,5})\\b");
+        Pattern prefixoPattern = Pattern.compile("\\b(N[ÚU]MERO|N[°º]?|N\\.|NUM)\\s*(\\d{1,5})\\b");
         Matcher prefixoMatcher = prefixoPattern.matcher(texto);
         if (prefixoMatcher.find()) {
             return prefixoMatcher.group(2);
