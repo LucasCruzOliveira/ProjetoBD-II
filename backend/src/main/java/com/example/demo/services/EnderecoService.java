@@ -19,15 +19,17 @@ public class EnderecoService extends ParseService {
     }
     @Override
     public void parseToRelational() {
+        String parada= "[\\s.]+(.+?)(?=\\s*(,|-|Bairro\\b|$))";
         this.patterns = List.of(
-                Pattern.compile("^(RUA|R)\\s"),
-                Pattern.compile("^(AV|AVENIDA)\\s"),
-                Pattern.compile("^(TRAVESSA|TRAV)\\s"),
-                Pattern.compile("^(LOTEAMENTO|LOTE)\\s"),
-                Pattern.compile("^(SITIO)\\s"),
-                Pattern.compile("^(RODOVIA)\\s"),
-                Pattern.compile("(FAZENDA)")
+                Pattern.compile("^(RUA|R)"+ parada, Pattern.CASE_INSENSITIVE),
+                Pattern.compile("^(AV|AVENIDA)" + parada, Pattern.CASE_INSENSITIVE),
+                Pattern.compile("^(TRAVESSA|TRAV)" + parada),
+                Pattern.compile("^(LOTEAMENTO|LOTE)" + parada),
+                Pattern.compile("^(SITIO)" + parada, Pattern.CASE_INSENSITIVE),
+                Pattern.compile("^(RODOVIA)" + parada, Pattern.CASE_INSENSITIVE),
+                Pattern.compile("(FAZENDA)" + parada, Pattern.CASE_INSENSITIVE)
         );
+
         for(Pattern pattern : patterns){
             buscarEnderecoPorRegex(pattern);
         }
@@ -39,12 +41,15 @@ public class EnderecoService extends ParseService {
             String texto  = csvRecord.get("txt_endereco").toUpperCase();
             String cep = csvRecord.get("txt_cep");
             String bairro = buscarBairro(texto);
-            String numero = buscarNumero(texto);
+
             Matcher matcher = pattern.matcher(texto);
 
             if(matcher.find()){
                 try{
-                    String logradouro = matcher.group();
+
+                    String logradouro = matcher.group().replace("S/N", "")
+                            .replaceAll("(\\b(SN|S/N|NR|N\\.|N°|N)\\b.*)", "");
+                    String numero = buscarNumero(texto, matcher.end());
                     Endereco endereco = new Endereco(logradouro,bairro, numero, texto, cep, null);
                     enderecoDAO.save(endereco);
                 }
@@ -66,21 +71,34 @@ public class EnderecoService extends ParseService {
             return "SEM BAIRRO";
         }
     }
-    public String buscarNumero(String texto){
+    public String buscarNumero(String texto, int inicioBusca){
         texto = texto.toUpperCase();
+
+        // procura S/N ou SN primeiro
         Pattern snPattern = Pattern.compile("\\b(S/N|SN)\\b");
         Matcher snMatcher = snPattern.matcher(texto);
         if (snMatcher.find()) {
             return "S/N";
         }
-        // Nessa linha a preocupação é achar algo que comece com: (Numero, n°, num, n),
-        // Depois também é buscado o intervalo numérico em si
-        Pattern numeroPattern = Pattern.compile("\\b(N[ÚU]MERO|N[°]|NUM)?\\s*(\\d{1,5})\\b");
-        Matcher numeroMatcher = numeroPattern.matcher(texto);
-        if (numeroMatcher.find()) {
-            return numeroMatcher.group(2);
+
+        // Buscando primeiramente por prefixos
+        Pattern prefixoPattern = Pattern.compile("\\b(N[ÚU]MERO|N[°º]?|N.|NUM)\\s*(\\d{1,5})\\b");
+        Matcher prefixoMatcher = prefixoPattern.matcher(texto);
+        if (prefixoMatcher.find()) {
+            return prefixoMatcher.group(2);
         }
 
-        return "";
+        // Depois se não achar com prefixos busca pelo último número (já que existem ruas como Rua 9 de junho 400 ou algo assim)
+        Pattern numeroPattern = Pattern.compile("\\b\\d{1,5}\\b");
+        Matcher numeroMatcher = numeroPattern.matcher(texto);
+
+        String ultimoNumero = "S/N";
+        while (numeroMatcher.find()) {
+            if (numeroMatcher.start() >= inicioBusca) {
+                ultimoNumero = numeroMatcher.group();
+            }
+        }
+
+        return ultimoNumero;
     }
 }
