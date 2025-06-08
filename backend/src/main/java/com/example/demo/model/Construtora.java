@@ -25,7 +25,7 @@ public class Construtora {
 
     @OneToMany
     @JoinColumn(name = "fk_empreendimento")
-    private List<Empreendimento> empreendimento;
+    private List<Empreendimento> empreendimentos;
 
     public Construtora(String name, String cnpj) {
         this.name = name;

@@ -27,7 +27,7 @@ public class DadosUH {
 
     @Column(nullable = false)
     private int distratadas;
-
+    
     public DadosUH(int quantidade, int entregues, int vigentes, int distratadas) {
         this.quantidade = quantidade;
         this.entregues = entregues;

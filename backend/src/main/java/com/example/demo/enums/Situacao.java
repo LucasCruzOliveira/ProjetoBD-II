@@ -1,9 +1,9 @@
 package com.example.demo.enums;
 
 public enum Situacao {
-    CONCLUIDO("Concluído"),
-    CANCELADO("Distratado/Cancelado"),
-    NAO_CONCLUIDO("Não Concluído");
+    CONCLUIDO("CONCLUÍDO"),
+    CANCELADO("DISTRATADO/CANCELADO"),
+    NAO_CONCLUIDO("NÃO CONCLUÍDO");
 
 
     private String desc;

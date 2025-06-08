@@ -11,10 +11,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+
 public class Empreendimento {
 
     @Id
@@ -27,7 +28,7 @@ public class Empreendimento {
     private Situacao situacao;
     private LocalDate dataAssinatura;
     @Column(nullable = false,length = 8)
-    private String codigoOperacao;
+    private int codigoOperacao;
     private BigDecimal valorDesembolsado;
     private BigDecimal valorTotalContratado;
 
@@ -46,7 +47,7 @@ public class Empreendimento {
     @JoinColumn(name = "fk_construtora")
     private Construtora construtora;
 
-    public Empreendimento(String nome, Situacao situacao, LocalDate dataAssinatura, String codigoOperacao, BigDecimal valorDesembolsado, BigDecimal valorTotalContratado, Modalidade modalidade) {
+    public Empreendimento(String nome, Situacao situacao, LocalDate dataAssinatura, int codigoOperacao, BigDecimal valorDesembolsado, BigDecimal valorTotalContratado, Modalidade modalidade) {
         this.nome = nome;
         this.situacao = situacao;
         this.dataAssinatura = dataAssinatura;

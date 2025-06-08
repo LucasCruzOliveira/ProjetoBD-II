@@ -38,7 +38,7 @@ public class Endereco {
     private Municipio municipio;
 
     @OneToMany
-    private List<Empreendimento> empreendimento;
+    private List<Empreendimento> empreendimentos;
 
     public Endereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio) {
         this.logradouro = logradouro;

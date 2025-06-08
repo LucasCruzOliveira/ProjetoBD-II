@@ -10,20 +10,24 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class EnderecoService extends ParseService {
+
     private final MunicipioDAO municipioDAO;
     private EnderecoDAO enderecoDAO;
     private List<Pattern> patterns;
+
     public EnderecoService(CsvService csvService, EnderecoDAO enderecoDAO, MunicipioDAO municipioDAO){
         super(csvService);
         this.enderecoDAO = enderecoDAO;
         this.municipioDAO = municipioDAO;
     }
+
     @Override
     public void parseToRelational() {
         String parada= "[\\s.]+(.+?)(?=\\s*(,|-|Bairro\\b|$))";
@@ -43,9 +47,12 @@ public class EnderecoService extends ParseService {
         }
     }
 
-
-
     public void buscarEnderecoPorRegex(Pattern pattern){
+        Map<String,  String> map = Map.of(
+                "R", "RUA",
+                "AV", "AVENIDA",
+                "TRAV", "TRAVESSA"
+        );
 
         for(CSVRecord csvRecord : csvService.getRecords()){
             String texto  = csvRecord.get("txt_endereco").toUpperCase().trim();
@@ -69,8 +76,14 @@ public class EnderecoService extends ParseService {
             if(matcher.find()){
                 try{
                     String numero = buscarNumero(texto, matcher.end(1));
-                    String logradouro = matcher.group().replace("S/N", "")
+                    String tipo = matcher.group(1);
+                    String logradouro = matcher.group();
+                    if(map.get(tipo) != null){
+                        logradouro = logradouro.replaceAll(tipo, map.get(tipo));
+                    }
+                    logradouro.replace("S/N", "")
                             .replaceAll("(\\b(SN|S/N|NR|N\\.|N°|N)\\b.*)", "");
+
                     Optional<Municipio> opMunicipio = municipioDAO.findMunicipioByNomeAndUfAndRegiao(nomeMunicipio, uf, regiaoEnum);
                     Municipio municipio = null;
                     if(opMunicipio.isPresent()){
@@ -105,6 +118,7 @@ public class EnderecoService extends ParseService {
             return "SEM BAIRRO";
         }
     }
+
     public String buscarNumero(String texto, int inicioBusca){
         texto = texto.toUpperCase();
 
@@ -132,7 +146,6 @@ public class EnderecoService extends ParseService {
                 ultimoNumero = numeroMatcher.group();
             }
         }
-
         return ultimoNumero;
     }
 }
