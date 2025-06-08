@@ -37,7 +37,7 @@ public class Endereco {
     @JoinColumn(name = "fk_municipio")
     private Municipio municipio;
 
-    @OneToMany
+    @OneToMany(mappedBy = "endereco")
     private List<Empreendimento> empreendimentos;
 
     public Endereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio) {

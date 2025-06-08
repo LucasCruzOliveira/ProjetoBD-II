@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dao.EmpreendimentoDAO;
+import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
 import com.example.demo.enums.Modalidade;
 import com.example.demo.enums.Situacao;
 import com.example.demo.model.Construtora;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class EmpreendimentoService extends ParseService {
@@ -87,5 +89,9 @@ public class EmpreendimentoService extends ParseService {
             Modalidade modalidade = Modalidade.valueOf(textoModalidade);
             empreendimentoDAO.save(new Empreendimento(nomeEmpreendimento, situacao, data, codigoOperacao, valorDesembolsado, valorTotalContratado, endereco, modalidade, dadosUH, construtora));
         }
+    }
+
+    public List<EmpreendimentosPorRegiaoDTO> buscarFinanciamentosPorRegiao() {
+        return  empreendimentoDAO.buscarEmpreendimentosPorRegiao();
     }
 }

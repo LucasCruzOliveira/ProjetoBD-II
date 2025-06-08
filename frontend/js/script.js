@@ -29,3 +29,4 @@ function voltar() {
 function abrirTabela(){
     window.location.href='tabela.html';
 }
+

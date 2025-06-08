@@ -1,7 +1,12 @@
 package com.example.demo.services;
 import com.example.demo.dao.ConstrutoraDAO;
+import com.example.demo.enums.Regiao;
 import com.example.demo.model.Construtora;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ConstrutoraService extends ParseService{
