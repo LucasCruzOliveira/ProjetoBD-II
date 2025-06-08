@@ -1,7 +1,6 @@
 package com.example.demo.services;
 import com.example.demo.dao.ConstrutoraDAO;
 import com.example.demo.model.Construtora;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,13 +12,7 @@ public class ConstrutoraService extends ParseService{
         this.construtoraDAO = construtoraDAO;
     }
 
-    @Override
-    public void parseToRelational() {
-
-        for(CSVRecord csvRecord : csvService.getRecords()){
-            String nome = csvRecord.get("txt_nome_construtora_entidade").trim();
-            String cnpj = csvRecord.get("txt_cnpj_construtora_entidade");
-
+    public Construtora parseToRelational(String nome, String cnpj) {
             if(nome.isBlank() || nome.equals("Não informado")){
                 nome = ("DESCONHECIDO");
             }
@@ -27,9 +20,7 @@ public class ConstrutoraService extends ParseService{
                 cnpj = ("NÃO INFORMADO");
             }
             Construtora construtora = new Construtora(nome, cnpj);
-            construtoraDAO.save(construtora);
-
-
-        }
+            return construtoraDAO.save(construtora);
     }
+
 }

@@ -47,13 +47,16 @@ public class Empreendimento {
     @JoinColumn(name = "fk_construtora")
     private Construtora construtora;
 
-    public Empreendimento(String nome, Situacao situacao, LocalDate dataAssinatura, int codigoOperacao, BigDecimal valorDesembolsado, BigDecimal valorTotalContratado, Modalidade modalidade) {
+    public Empreendimento(String nome, Situacao situacao, LocalDate dataAssinatura, int codigoOperacao, BigDecimal valorDesembolsado, BigDecimal valorTotalContratado, Endereco endereco, Modalidade modalidade, DadosUH dadosUH, Construtora construtora) {
         this.nome = nome;
         this.situacao = situacao;
         this.dataAssinatura = dataAssinatura;
         this.codigoOperacao = codigoOperacao;
         this.valorDesembolsado = valorDesembolsado;
         this.valorTotalContratado = valorTotalContratado;
+        this.endereco = endereco;
         this.modalidade = modalidade;
+        this.dadosUH = dadosUH;
+        this.construtora = construtora;
     }
 }

@@ -13,5 +13,4 @@ public abstract class ParseService {
     protected ParseService(CsvService csvService){
         this.csvService = csvService;
     }
-    public abstract  void parseToRelational();
 }
