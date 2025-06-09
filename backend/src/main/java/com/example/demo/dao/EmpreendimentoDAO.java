@@ -1,5 +1,7 @@
 package com.example.demo.dao;
 
+import com.example.demo.dto.EmpreendimentoPorLogradouroDTO;
+import com.example.demo.dto.EmpreendimentoPorModalidadeDTO;
 import com.example.demo.dto.EmpreendimentoPorSituacaoDTO;
 import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
 import com.example.demo.model.Empreendimento;
@@ -15,4 +17,10 @@ public interface EmpreendimentoDAO extends JpaRepository<Empreendimento, UUID> {
 
     @Query("SELECT new com.example.demo.dto.EmpreendimentoPorSituacaoDTO(e.situacao, COUNT(DISTINCT e.id)) FROM Empreendimento e GROUP BY e.situacao")
     List<EmpreendimentoPorSituacaoDTO> buscarEmpreendimentoPorSituacao();
+
+    @Query("SELECT new com.example.demo.dto.EmpreendimentoPorModalidadeDTO(e.modalidade, COUNT(DISTINCT e.id)) FROM Empreendimento e GROUP BY e.modalidade")
+    List<EmpreendimentoPorModalidadeDTO> buscarEmpreendimentoPorModalidade();
+
+    @Query("SELECT new com.example.demo.dto.EmpreendimentoPorLogradouroDTO(e.endereco.tipoLogradouro, COUNT(DISTINCT e.id)) FROM Empreendimento e GROUP BY e.endereco.tipoLogradouro")
+    List<EmpreendimentoPorLogradouroDTO> buscarEmpreendimentoPorLogradouro();
 }

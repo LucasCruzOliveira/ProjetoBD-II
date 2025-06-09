@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,8 @@ public class Endereco {
     @Column(nullable = false)
     private String logradouro;
 
+    private String tipoLogradouro;
+
     @Column(nullable = false)
     private String bairro;
 
@@ -35,13 +38,15 @@ public class Endereco {
 
     @ManyToOne
     @JoinColumn(name = "fk_municipio")
+    @JsonIgnore
     private Municipio municipio;
 
     @OneToMany(mappedBy = "endereco")
     private List<Empreendimento> empreendimentos;
 
-    public Endereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio) {
+    public Endereco(String logradouro,String tipo, String bairro, String numero, String texto, String cep, Municipio municipio) {
         this.logradouro = logradouro;
+        this.tipoLogradouro = tipo;
         this.bairro = bairro;
         this.numero = numero;
         this.texto = texto;

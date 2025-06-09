@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import com.example.demo.enums.Regiao;
 import com.example.demo.enums.UF;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class Municipio {
     private Regiao regiao;
 
     @OneToMany(mappedBy = "municipio")
+    @JsonIgnore
     private List<Endereco> endereco;
 
     public Municipio(String nome, UF uf, Regiao regiao) {

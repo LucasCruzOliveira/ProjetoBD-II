@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.EmpreendimentoPorLogradouroDTO;
+import com.example.demo.dto.EmpreendimentoPorModalidadeDTO;
 import com.example.demo.dto.EmpreendimentoPorSituacaoDTO;
 import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
 import com.example.demo.services.EmpreendimentoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +20,25 @@ public class DashboardController {
         this.empreendimentoService = empreendimentoService;
     }
 
-    @GetMapping("/financiamentoRegiao")
-    public List<EmpreendimentosPorRegiaoDTO> buscarFinanciamentos(){
+    @GetMapping("/empreendimentos")
+    public List<EmpreendimentosPorRegiaoDTO> buscarEmpreendimentosPorRegiao(){
         return empreendimentoService.buscarFinanciamentosPorRegiao();
     }
 
-    @GetMapping("/financiamentoSituacao")
-    public List<EmpreendimentoPorSituacaoDTO> busacrFinanciamentosPorSituacao(){
+    @GetMapping("/situacoes")
+    public List<EmpreendimentoPorSituacaoDTO> buscarEmpreendimentoPorSituacao(){
         return empreendimentoService.buscarEmpreendimentoPorSituacao();
     }
 
+    @GetMapping("/modalidades")
+    public List<EmpreendimentoPorModalidadeDTO> buscarEmpreendimentoPorModalidade(){
+        return  empreendimentoService.buscarEmpreendimentoPorModalidade();
+    }
+
+    @GetMapping("/logradouros")
+    public List<EmpreendimentoPorLogradouroDTO> buscarEmpreendimentoPorLogradouro(){
+        return empreendimentoService.buscarEmpreendimentoPorLogradouro();
+    }
 
 }
 

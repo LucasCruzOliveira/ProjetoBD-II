@@ -17,17 +17,14 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 public class EnderecoService extends ParseService {
-
-    private final MunicipioDAO municipioDAO;
     private  MunicipioService municipioService;
     private EnderecoDAO enderecoDAO;
     private List<Pattern> patterns;
 
-    public EnderecoService(CsvService csvService, MunicipioService municipioService, EnderecoDAO enderecoDAO, MunicipioDAO municipioDAO) {
+    public EnderecoService(CsvService csvService, MunicipioService municipioService, EnderecoDAO enderecoDAO) {
         super(csvService);
         this.municipioService = municipioService;
         this.enderecoDAO = enderecoDAO;
-        this.municipioDAO = municipioDAO;
     }
 
     public Endereco parseToRelational(String texto, String cep, String nomeMunicipio, String regiao, String uf ) {
@@ -38,40 +35,37 @@ public class EnderecoService extends ParseService {
                 Pattern.compile("^(AV|AVENIDA)" + parada, Pattern.CASE_INSENSITIVE),
                 Pattern.compile("^(TRAVESSA|TRAV)" + parada),
                 Pattern.compile("^(LOTEAMENTO|LOTE)" + parada),
-                Pattern.compile("^(SITIO)" + parada, Pattern.CASE_INSENSITIVE),
+                Pattern.compile("^(SITIO|FAZENDA)" + parada, Pattern.CASE_INSENSITIVE),
                 Pattern.compile("^(RODOVIA)" + parada, Pattern.CASE_INSENSITIVE),
-                Pattern.compile("(FAZENDA)" + parada, Pattern.CASE_INSENSITIVE)
+                Pattern.compile("^(ESTRADA)" + parada, Pattern.CASE_INSENSITIVE)
         );
 
         Endereco endereco = null;
         Municipio municipio = municipioService.parseToRelational(nomeMunicipio, uf, regiao);
         for(Pattern pattern : patterns){
-            endereco = buscarEnderecoPorRegex(pattern, texto, cep, municipio, regiao);
+            endereco = buscarEnderecoPorRegex(pattern, texto, cep, municipio);
             if(endereco != null) {
                 break;
             }
         }
         if(endereco == null){
-            endereco = new  Endereco("NÃO IDENTIFICADO", "SEM BAIRRO", "S/N", texto, cep, municipio);
+            endereco = new  Endereco("NÃO IDENTIFICADO", "DESCONHECIDO","SEM BAIRRO", "S/N", "DESCONHECIDO", "DESCONHECIDO", municipio);
         }
         return enderecoDAO.save(endereco);
     }
 
-    public Endereco buscarEnderecoPorRegex(Pattern pattern, String texto, String cep, Municipio municipio, String regiao){
+    public Endereco buscarEnderecoPorRegex(Pattern pattern, String texto, String cep, Municipio municipio){
         Map<String,  String> map = Map.of(
                 "R", "RUA",
                 "AV", "AVENIDA",
-                "TRAV", "TRAVESSA"
+                "TRAV", "TRAVESSA",
+                "LOTEAMENTO", "LOTE",
+                "FAZENDA", "SITIO",
+                "GLEBA" , "LOTE"
         );
 
-        if(regiao.equals("CENTRO-OESTE")){
-            regiao = "CENTRO_OESTE";
-        }
-        Regiao regiaoEnum = Regiao.valueOf(regiao);
 
-        if(cep.length() != 8){
-            cep = "DESCONHECIDO";
-        }
+
         String bairro = buscarBairro(texto);
 
         Matcher matcher = pattern.matcher(texto);
@@ -83,12 +77,20 @@ public class EnderecoService extends ParseService {
                 String logradouro = matcher.group();
                 if(map.get(tipo) != null){
                     logradouro = logradouro.replaceAll(tipo, map.get(tipo));
+                    tipo = map.get(tipo);
                 }
                 logradouro.replace("S/N", "")
                         .replaceAll("(\\b(SN|S/N|NR|N\\.|N°|N)\\b.*)", "");
 
+                if(texto.isEmpty()){
+                    texto = "DESCONHECIDO";
+                }
+                if(cep.length() != 8){
+                    cep = "DESCONHECIDO";
+                }
+                return acharOuCriarEndereco(logradouro, tipo, bairro, numero, texto, cep, municipio);
 
-                return acharOuCriarEndereco(logradouro, bairro, numero, texto, cep, municipio);
+
             }
             catch (Exception e){
                 System.out.println(e.getMessage());
@@ -97,12 +99,12 @@ public class EnderecoService extends ParseService {
         return null;
     }
 
-    public Endereco acharOuCriarEndereco(String logradouro, String bairro, String numero, String texto, String cep, Municipio municipio){
+    public Endereco acharOuCriarEndereco(String logradouro,String tipo, String bairro, String numero, String texto, String cep, Municipio municipio){
         Optional<Endereco> enderecoOptional = enderecoDAO.findByCepAndLogradouroAndNumero(cep, logradouro, numero);
         if(enderecoOptional.isPresent()){
            return enderecoOptional.get();
         }
-        return enderecoDAO.save(new Endereco(logradouro, bairro, numero,texto, cep, municipio));
+        return enderecoDAO.save(new Endereco(logradouro, tipo,bairro, numero,texto, cep, municipio));
     }
 
     public String buscarBairro(String texto){
