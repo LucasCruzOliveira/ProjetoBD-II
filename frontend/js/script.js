@@ -14,6 +14,8 @@ function mostrarDashboard(n) {
   }
 }
 
+
+
 function avancar() {
   if (atual < total) {
     mostrarDashboard(atual + 1);

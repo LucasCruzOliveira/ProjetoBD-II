@@ -1,9 +1,6 @@
 package com.example.demo.dao;
 
-import com.example.demo.dto.EmpreendimentoPorLogradouroDTO;
-import com.example.demo.dto.EmpreendimentoPorModalidadeDTO;
-import com.example.demo.dto.EmpreendimentoPorSituacaoDTO;
-import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
+import com.example.demo.dto.*;
 import com.example.demo.model.Empreendimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +20,6 @@ public interface EmpreendimentoDAO extends JpaRepository<Empreendimento, UUID> {
 
     @Query("SELECT new com.example.demo.dto.EmpreendimentoPorLogradouroDTO(e.endereco.tipoLogradouro, COUNT(DISTINCT e.id)) FROM Empreendimento e GROUP BY e.endereco.tipoLogradouro")
     List<EmpreendimentoPorLogradouroDTO> buscarEmpreendimentoPorLogradouro();
+
+    List<EmpreendimentoDTO> buscarEmpreendimentos();
 }
