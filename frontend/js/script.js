@@ -1,5 +1,5 @@
 let atual = 1;
-const total = 2;
+const total = 3;
 
 function mostrarDashboard(n) {
   for (let i = 1; i <= total; i++) {

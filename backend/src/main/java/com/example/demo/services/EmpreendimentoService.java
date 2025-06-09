@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dao.EmpreendimentoDAO;
+import com.example.demo.dto.EmpreendimentoPorSituacaoDTO;
 import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
 import com.example.demo.enums.Modalidade;
 import com.example.demo.enums.Situacao;
@@ -92,6 +93,10 @@ public class EmpreendimentoService extends ParseService {
     }
 
     public List<EmpreendimentosPorRegiaoDTO> buscarFinanciamentosPorRegiao() {
-        return  empreendimentoDAO.buscarEmpreendimentosPorRegiao();
+        return empreendimentoDAO.buscarEmpreendimentosPorRegiao();
+    }
+
+    public List<EmpreendimentoPorSituacaoDTO> buscarEmpreendimentoPorSituacao(){
+        return empreendimentoDAO.buscarEmpreendimentoPorSituacao();
     }
 }

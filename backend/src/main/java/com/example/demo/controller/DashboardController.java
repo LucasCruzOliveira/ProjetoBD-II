@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.EmpreendimentoPorSituacaoDTO;
 import com.example.demo.dto.EmpreendimentosPorRegiaoDTO;
 import com.example.demo.services.EmpreendimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/dashboard")
 public class DashboardController {
-    @Autowired
     private EmpreendimentoService empreendimentoService;
 
     public DashboardController(EmpreendimentoService empreendimentoService) {
@@ -22,6 +22,11 @@ public class DashboardController {
     @GetMapping("/financiamentoRegiao")
     public List<EmpreendimentosPorRegiaoDTO> buscarFinanciamentos(){
         return empreendimentoService.buscarFinanciamentosPorRegiao();
+    }
+
+    @GetMapping("/financiamentoSituacao")
+    public List<EmpreendimentoPorSituacaoDTO> busacrFinanciamentosPorSituacao(){
+        return empreendimentoService.buscarEmpreendimentoPorSituacao();
     }
 
 

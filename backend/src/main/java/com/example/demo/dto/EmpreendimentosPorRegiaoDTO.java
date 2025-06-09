@@ -11,7 +11,6 @@ public class EmpreendimentosPorRegiaoDTO {
         this.total = total;
     }
 
-
     public Regiao getRegiao() {
         return regiao;
     }
