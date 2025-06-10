@@ -5,11 +5,7 @@ import com.example.demo.enums.Regiao;
 import com.example.demo.enums.UF;
 import com.example.demo.model.Municipio;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -39,13 +35,4 @@ public class MunicipioService extends ParseService {
         return municipioDAO.save(new Municipio(nome, uf, regiao));
     }
 
-
-
-    public Map<String, Long> contarEstados(){
-        return municipioDAO.findAll().stream()
-                .collect(Collectors.groupingBy(
-                        m -> m.getUf().toString(),
-                        Collectors.counting()
-                ));
-    }
 }

@@ -11,7 +11,4 @@ import java.util.UUID;
 
 public interface MunicipioDAO extends JpaRepository<Municipio, UUID> {
     Optional<Municipio> findMunicipioByNomeAndUfAndRegiao(String nome, UF Uf, Regiao regiao);
-
-    List<Municipio> findAll();
-
 }

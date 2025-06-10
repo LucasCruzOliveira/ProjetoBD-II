@@ -50,9 +50,9 @@ public class CsvService {
     public void escrever(Collection<String> linhas, String cabecalho){
         String path = "";
         if(linhas instanceof List<String>){
-            path = "src/main/resources/dados-com-repeticao/";
+            path = "C:\\WWW\\dashboard\\ProjetoBD-II\\backend\\src\\main\\resources\\dados-com-repeticao\\";
         }else {
-            path = "src/main/resources/dados-sem-repeticao/";
+            path = "C:\\WWW\\dashboard\\ProjetoBD-II\\backend\\src\\main\\resources\\dados-sem-repeticao\\";
         }
         try (
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(path + cabecalho + ".csv"));

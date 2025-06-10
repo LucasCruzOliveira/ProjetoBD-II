@@ -1,9 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dao.EnderecoDAO;
-import com.example.demo.dao.MunicipioDAO;
 import com.example.demo.dto.EnderecosDTO;
-import com.example.demo.enums.Regiao;
 import com.example.demo.model.Endereco;
 import com.example.demo.model.Municipio;
 import jakarta.transaction.Transactional;
@@ -50,7 +48,7 @@ public class EnderecoService extends ParseService {
             }
         }
         if(endereco == null){
-            endereco = new  Endereco("NÃO IDENTIFICADO", "DESCONHECIDO","SEM BAIRRO", "S/N", "DESCONHECIDO", "DESCONHECIDO", municipio);
+            endereco = new  Endereco("NÃO IDENTIFICADO", "DESCONHECIDO","SEM BAIRRO", "S/N", texto, "DESCONHECIDO", municipio);
         }
         return enderecoDAO.save(endereco);
     }
@@ -64,8 +62,6 @@ public class EnderecoService extends ParseService {
                 "FAZENDA", "SITIO",
                 "GLEBA" , "LOTE"
         );
-
-
 
         String bairro = buscarBairro(texto);
 
