@@ -21,5 +21,4 @@ public interface EmpreendimentoDAO extends JpaRepository<Empreendimento, UUID> {
     @Query("SELECT new com.example.demo.dto.EmpreendimentoPorLogradouroDTO(e.endereco.tipoLogradouro, COUNT(DISTINCT e.id)) FROM Empreendimento e GROUP BY e.endereco.tipoLogradouro")
     List<EmpreendimentoPorLogradouroDTO> buscarEmpreendimentoPorLogradouro();
 
-    List<EmpreendimentoDTO> buscarEmpreendimentos();
 }

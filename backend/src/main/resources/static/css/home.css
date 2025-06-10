@@ -1,0 +1,46 @@
+.home-area {
+  padding: 3rem;
+}
+
+.navbar .btn-tabela {
+  background-color: #0dcaf0;
+  color: #212529;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.navbar .btn-tabela:hover {
+  background-color: #077990;
+}
+.navbar .navegacao {
+  display: flex;
+  gap: 10px;
+}
+.navbar .navegacao .btn {
+  background-color: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+.navbar .navegacao .btn:hover {
+  background-color: #343a40;
+}
+.navbar .navegacao .btn:shover {
+  background-color: #0d6efd;
+}
+
+.dashboard {
+  display: none;
+}
+
+.dashboard.ativo {
+  display: block;
+}
+
+#graficoPizza, #graficoStatus, #graficoModalidade, #graficoLogadouro {
+  display: block;
+  margin: 0 auto;
+}/*# sourceMappingURL=home.css.map */

@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dao.EnderecoDAO;
 import com.example.demo.dao.MunicipioDAO;
+import com.example.demo.dto.EnderecosDTO;
 import com.example.demo.enums.Regiao;
 import com.example.demo.model.Endereco;
 import com.example.demo.model.Municipio;
@@ -149,4 +150,7 @@ public class EnderecoService extends ParseService {
         return ultimoNumero;
     }
 
+    public List<EnderecosDTO> buscarEnderecos(){
+        return enderecoDAO.buscarEnderecos();
+    }
 }

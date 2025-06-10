@@ -12,10 +12,9 @@ public class EnderecosDTO {
     private Municipio municipio;
     private UF uf;
     private Regiao regiao;
-    private String complemento;
-    private String Texto;
+    private String texto;
 
-    public EnderecosDTO(String logradouro, String bairro, String numero, String CEP, Municipio municipio, UF uf, Regiao regiao, String complemento, String texto) {
+    public EnderecosDTO(String logradouro, String bairro, String numero, String CEP, Municipio municipio, UF uf, Regiao regiao, String texto) {
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.numero = numero;
@@ -23,8 +22,7 @@ public class EnderecosDTO {
         this.municipio = municipio;
         this.uf = uf;
         this.regiao = regiao;
-        this.complemento = complemento;
-        Texto = texto;
+        this.texto = texto;
     }
 
     public String getLogradouro() {
@@ -55,11 +53,7 @@ public class EnderecosDTO {
         return regiao;
     }
 
-    public String getComplemento() {
-        return complemento;
-    }
-
     public String getTexto() {
-        return Texto;
+        return texto;
     }
 }
