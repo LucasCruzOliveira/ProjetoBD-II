@@ -14,6 +14,7 @@ public class DashboardApplication {
 			run.getBean(CsvService.class).lerPorCabecario(false);
 			run.getBean(EmpreendimentoService.class).parseToRelational();
 		 */
+		
 		run.getBean(EmpreendimentoService.class).buscarFinanciamentosPorRegiao();
 		run.getBean(EmpreendimentoService.class).buscarEmpreendimentoPorModalidade();
 		run.getBean(EmpreendimentoService.class).buscarEmpreendimentoPorSituacao();
